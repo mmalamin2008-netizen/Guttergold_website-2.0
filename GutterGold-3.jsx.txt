@@ -1,0 +1,1062 @@
+import { useState, useEffect, useRef } from "react";
+
+const PRODUCTS = [
+  {
+    id: 1,
+    name: "GUTTER ARCH HOODIE",
+    price: "₦85,000",
+    tag: "DROP 001",
+    color: "OBSIDIAN",
+    img: "https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600&q=80",
+  },
+  {
+    id: 2,
+    name: "CONCRETE CARGO PANT",
+    price: "₦72,000",
+    tag: "DROP 001",
+    color: "ASH",
+    img: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&q=80",
+  },
+  {
+    id: 3,
+    name: "TUNNEL VISION TEE",
+    price: "₦38,000",
+    tag: "DROP 001",
+    color: "CHALK",
+    img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80",
+  },
+  {
+    id: 4,
+    name: "SIGNAL BLOCK JACKET",
+    price: "₦145,000",
+    tag: "DROP 001",
+    color: "CARBON",
+    img: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&q=80",
+  },
+];
+
+const LOOKBOOK = [
+  "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80",
+  "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&q=80",
+  "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&q=80",
+  "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80",
+  "https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=800&q=80",
+];
+
+const COMMUNITY = [
+  "https://images.unsplash.com/photo-1611601322175-ef8ec8c5e1b0?w=400&q=80",
+  "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=80",
+  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80",
+  "https://images.unsplash.com/photo-1488161628813-04466f872be2?w=400&q=80",
+  "https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?w=400&q=80",
+  "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&q=80",
+];
+
+export default function GutterGold() {
+  const [loading, setLoading] = useState(true);
+  const [loadProgress, setLoadProgress] = useState(0);
+  const [cursor, setCursor] = useState({ x: -100, y: -100 });
+  const [cursorHover, setCursorHover] = useState(false);
+  const [hoveredProduct, setHoveredProduct] = useState(null);
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [navVisible, setNavVisible] = useState(false);
+  const lookbookRef = useRef(null);
+
+  useEffect(() => {
+    let prog = 0;
+    const interval = setInterval(() => {
+      prog += Math.random() * 18 + 4;
+      if (prog >= 100) {
+        prog = 100;
+        setLoadProgress(100);
+        clearInterval(interval);
+        setTimeout(() => setLoading(false), 700);
+      } else {
+        setLoadProgress(Math.floor(prog));
+      }
+    }, 120);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const move = (e) => setCursor({ x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", move);
+    return () => window.removeEventListener("mousemove", move);
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => setNavVisible(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const handleSubmit = () => {
+    if (email) setSubmitted(true);
+  };
+
+  return (
+    <div
+      style={{
+        background: "#0A0A0A",
+        color: "#F5F5F5",
+        fontFamily: "'Helvetica Neue', Arial, sans-serif",
+        overflowX: "hidden",
+        cursor: "none",
+      }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@1,400;1,700&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: #0A0A0A; }
+        ::-webkit-scrollbar-thumb { background: #FF5E1A; }
+
+        .grain {
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          pointer-events: none; z-index: 9999; opacity: 0.045;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+          background-size: 200px 200px;
+          animation: grainAnim 0.5s steps(2) infinite;
+        }
+        @keyframes grainAnim {
+          0% { transform: translate(0, 0); }
+          25% { transform: translate(-2%, -3%); }
+          50% { transform: translate(3%, 2%); }
+          75% { transform: translate(-1%, 3%); }
+          100% { transform: translate(2%, -2%); }
+        }
+
+        .cursor-dot {
+          position: fixed; width: 8px; height: 8px;
+          background: #FF5E1A; border-radius: 50%;
+          pointer-events: none; z-index: 10000;
+          transition: transform 0.1s ease;
+          transform: translate(-50%, -50%);
+        }
+        .cursor-ring {
+          position: fixed; width: 36px; height: 36px;
+          border: 1px solid rgba(255,94,26,0.6); border-radius: 50%;
+          pointer-events: none; z-index: 9999;
+          transform: translate(-50%, -50%);
+          transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+        }
+        .cursor-ring.hover {
+          width: 60px; height: 60px;
+          border-color: #FF5E1A;
+          background: rgba(255,94,26,0.08);
+        }
+
+        .loader {
+          position: fixed; inset: 0; background: #0A0A0A; z-index: 99999;
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .loader.out { opacity: 0; transform: scale(1.04); pointer-events: none; }
+
+        .loader-brand {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: clamp(64px, 12vw, 160px);
+          letter-spacing: 0.08em;
+          color: #F5F5F5;
+          line-height: 1;
+          position: relative;
+        }
+        .loader-brand span { color: #FF5E1A; }
+        .loader-line {
+          width: 320px; height: 1px; background: #1A1A1A;
+          margin-top: 40px; position: relative; overflow: hidden;
+        }
+        .loader-fill {
+          height: 100%; background: #FF5E1A;
+          transition: width 0.1s linear;
+        }
+        .loader-num {
+          font-family: 'DM Mono', monospace;
+          font-size: 11px; letter-spacing: 0.2em;
+          color: rgba(245,245,245,0.3); margin-top: 16px;
+        }
+
+        .nav {
+          position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+          padding: 0 48px;
+          display: flex; align-items: center; justify-content: space-between;
+          height: 64px;
+          transition: background 0.4s ease, backdrop-filter 0.4s ease;
+        }
+        .nav.scrolled {
+          background: rgba(10,10,10,0.92);
+          backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(255,94,26,0.12);
+        }
+        .nav-logo {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 22px; letter-spacing: 0.14em; color: #F5F5F5;
+        }
+        .nav-logo span { color: #FF5E1A; }
+        .nav-links {
+          display: flex; gap: 40px; list-style: none;
+        }
+        .nav-links a {
+          font-family: 'DM Mono', monospace;
+          font-size: 10px; letter-spacing: 0.22em;
+          color: rgba(245,245,245,0.55); text-decoration: none;
+          transition: color 0.2s;
+          text-transform: uppercase;
+        }
+        .nav-links a:hover { color: #FF5E1A; }
+        .nav-cta {
+          font-family: 'DM Mono', monospace;
+          font-size: 10px; letter-spacing: 0.22em;
+          border: 1px solid rgba(255,94,26,0.5);
+          padding: 10px 24px; color: #FF5E1A; text-decoration: none;
+          transition: all 0.2s; text-transform: uppercase;
+          background: transparent;
+          cursor: none;
+        }
+        .nav-cta:hover { background: #FF5E1A; color: #0A0A0A; }
+
+        /* HERO */
+        .hero {
+          position: relative; height: 100vh; overflow: hidden;
+          display: flex; align-items: flex-end;
+          padding: 0 48px 80px;
+        }
+        .hero-bg {
+          position: absolute; inset: 0; z-index: 0;
+          background:
+            linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.1) 40%, rgba(10,10,10,0.85) 85%, #0A0A0A 100%),
+            url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1800&q=80') center/cover no-repeat;
+        }
+        .hero-bg::after {
+          content: ''; position: absolute; inset: 0;
+          background: repeating-linear-gradient(
+            0deg, transparent, transparent 3px, rgba(0,0,0,0.03) 3px, rgba(0,0,0,0.03) 4px
+          );
+        }
+        .hero-content { position: relative; z-index: 2; max-width: 900px; }
+        .hero-eyebrow {
+          font-family: 'DM Mono', monospace;
+          font-size: 10px; letter-spacing: 0.3em;
+          color: #FF5E1A; margin-bottom: 20px;
+          display: flex; align-items: center; gap: 12px;
+        }
+        .hero-eyebrow::before {
+          content: ''; display: inline-block;
+          width: 40px; height: 1px; background: #FF5E1A;
+        }
+        .hero-headline {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: clamp(64px, 10vw, 148px);
+          line-height: 0.92; letter-spacing: 0.02em;
+          color: #F5F5F5; margin-bottom: 24px;
+        }
+        .hero-headline .accent { color: #FF5E1A; }
+        .hero-sub {
+          font-family: 'DM Mono', monospace;
+          font-size: clamp(12px, 1.4vw, 15px);
+          color: rgba(245,245,245,0.5);
+          letter-spacing: 0.06em; line-height: 1.7;
+          max-width: 480px; margin-bottom: 48px;
+          text-transform: uppercase;
+        }
+        .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+        .btn-primary {
+          font-family: 'DM Mono', monospace;
+          font-size: 11px; letter-spacing: 0.22em;
+          background: #FF5E1A; color: #0A0A0A;
+          padding: 18px 40px; border: none;
+          cursor: none; text-transform: uppercase;
+          transition: all 0.25s ease;
+          font-weight: 500;
+        }
+        .btn-primary:hover { background: #F5F5F5; transform: translateY(-2px); }
+        .btn-secondary {
+          font-family: 'DM Mono', monospace;
+          font-size: 11px; letter-spacing: 0.22em;
+          background: transparent; color: #F5F5F5;
+          padding: 18px 40px;
+          border: 1px solid rgba(245,245,245,0.25);
+          cursor: none; text-transform: uppercase;
+          transition: all 0.25s ease;
+        }
+        .btn-secondary:hover { border-color: #F5F5F5; transform: translateY(-2px); }
+        .hero-scroll {
+          position: absolute; right: 48px; bottom: 80px; z-index: 2;
+          display: flex; flex-direction: column; align-items: center; gap: 12px;
+        }
+        .hero-scroll-line {
+          width: 1px; height: 60px; background: linear-gradient(to bottom, transparent, rgba(245,245,245,0.3));
+          animation: scrollPulse 2s ease-in-out infinite;
+        }
+        @keyframes scrollPulse {
+          0%, 100% { opacity: 0.3; } 50% { opacity: 1; }
+        }
+        .hero-scroll-text {
+          font-family: 'DM Mono', monospace; font-size: 9px;
+          letter-spacing: 0.28em; color: rgba(245,245,245,0.35);
+          writing-mode: vertical-lr; text-transform: uppercase;
+        }
+
+        /* BRAND STORY */
+        .story {
+          padding: 140px 48px;
+          background: #0A0A0A;
+          position: relative; overflow: hidden;
+        }
+        .story::before {
+          content: 'GG'; position: absolute;
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 40vw; color: rgba(255,94,26,0.02);
+          top: 50%; left: 50%; transform: translate(-50%,-50%);
+          pointer-events: none; letter-spacing: -0.05em;
+          white-space: nowrap;
+        }
+        .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; }
+        .story-label {
+          font-family: 'DM Mono', monospace;
+          font-size: 10px; letter-spacing: 0.3em; color: #FF5E1A;
+          text-transform: uppercase; margin-bottom: 24px;
+          display: flex; align-items: center; gap: 12px;
+        }
+        .story-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,94,26,0.3); }
+        .story-headline {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: clamp(48px, 6vw, 88px);
+          line-height: 0.95; color: #F5F5F5; margin-bottom: 32px;
+        }
+        .story-text {
+          font-family: 'DM Mono', monospace;
+          font-size: 13px; line-height: 2;
+          color: rgba(245,245,245,0.45);
+          letter-spacing: 0.04em;
+        }
+        .story-text p { margin-bottom: 20px; }
+        .story-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+        .story-stat {
+          background: #1A1A1A; padding: 36px 28px;
+          position: relative; overflow: hidden;
+        }
+        .story-stat::before {
+          content: ''; position: absolute; top: 0; left: 0;
+          width: 3px; height: 100%; background: #FF5E1A;
+        }
+        .story-stat-num {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 56px; color: #FF5E1A; line-height: 1;
+          margin-bottom: 8px;
+        }
+        .story-stat-label {
+          font-family: 'DM Mono', monospace;
+          font-size: 10px; letter-spacing: 0.22em;
+          color: rgba(245,245,245,0.4); text-transform: uppercase;
+        }
+        .story-img-wrap {
+          position: relative; aspect-ratio: 4/5; overflow: hidden;
+        }
+        .story-img-wrap img {
+          width: 100%; height: 100%; object-fit: cover;
+          filter: grayscale(30%) contrast(1.1);
+          transition: transform 0.8s ease;
+        }
+        .story-img-wrap:hover img { transform: scale(1.04); }
+        .story-img-overlay {
+          position: absolute; inset: 0;
+          background: linear-gradient(135deg, rgba(255,94,26,0.08) 0%, transparent 60%);
+        }
+        .story-img-tag {
+          position: absolute; bottom: 24px; left: 24px;
+          font-family: 'DM Mono', monospace; font-size: 10px;
+          letter-spacing: 0.2em; color: #FF5E1A;
+          border: 1px solid rgba(255,94,26,0.4);
+          padding: 8px 16px; background: rgba(10,10,10,0.8);
+          backdrop-filter: blur(4px); text-transform: uppercase;
+        }
+
+        /* PRODUCTS */
+        .products {
+          padding: 120px 48px;
+          background: #0A0A0A;
+        }
+        .section-header { margin-bottom: 64px; max-width: 1400px; margin-left: auto; margin-right: auto; }
+        .section-header-row { display: flex; align-items: flex-end; justify-content: space-between; }
+        .section-label {
+          font-family: 'DM Mono', monospace;
+          font-size: 10px; letter-spacing: 0.3em; color: #FF5E1A;
+          text-transform: uppercase; margin-bottom: 12px;
+        }
+        .section-title {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: clamp(40px, 5vw, 72px);
+          line-height: 1; color: #F5F5F5;
+        }
+        .section-link {
+          font-family: 'DM Mono', monospace; font-size: 10px;
+          letter-spacing: 0.2em; color: rgba(245,245,245,0.4);
+          text-decoration: none; text-transform: uppercase;
+          border-bottom: 1px solid rgba(255,94,26,0.3);
+          padding-bottom: 2px;
+          transition: color 0.2s; cursor: none;
+        }
+        .section-link:hover { color: #FF5E1A; }
+        .products-grid {
+          display: grid; grid-template-columns: repeat(4, 1fr);
+          gap: 2px; max-width: 1400px; margin: 0 auto;
+        }
+        .product-card {
+          background: #111; position: relative; overflow: hidden;
+          cursor: none;
+        }
+        .product-img-wrap {
+          aspect-ratio: 3/4; overflow: hidden; position: relative;
+        }
+        .product-img-wrap img {
+          width: 100%; height: 100%; object-fit: cover;
+          transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+          filter: grayscale(20%);
+        }
+        .product-card:hover .product-img-wrap img { transform: scale(1.08); filter: grayscale(0%); }
+        .product-overlay {
+          position: absolute; inset: 0;
+          background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 50%);
+        }
+        .product-tag {
+          position: absolute; top: 16px; left: 16px;
+          font-family: 'DM Mono', monospace; font-size: 9px;
+          letter-spacing: 0.2em; background: #FF5E1A; color: #0A0A0A;
+          padding: 5px 10px; text-transform: uppercase; font-weight: 500;
+        }
+        .product-add {
+          position: absolute; bottom: 0; left: 0; right: 0;
+          background: #FF5E1A; color: #0A0A0A;
+          font-family: 'DM Mono', monospace; font-size: 10px;
+          letter-spacing: 0.22em; text-transform: uppercase;
+          padding: 16px; text-align: center;
+          transform: translateY(100%);
+          transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+          font-weight: 500;
+        }
+        .product-card:hover .product-add { transform: translateY(0); }
+        .product-info { padding: 20px 16px; background: #111; }
+        .product-name {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 18px; letter-spacing: 0.08em; color: #F5F5F5;
+          margin-bottom: 6px;
+        }
+        .product-meta {
+          display: flex; justify-content: space-between; align-items: center;
+        }
+        .product-color {
+          font-family: 'DM Mono', monospace; font-size: 9px;
+          letter-spacing: 0.18em; color: rgba(245,245,245,0.3); text-transform: uppercase;
+        }
+        .product-price {
+          font-family: 'DM Mono', monospace; font-size: 13px;
+          color: #FF5E1A; letter-spacing: 0.06em;
+        }
+
+        /* CAMPAIGN */
+        .campaign {
+          position: relative; height: 90vh; overflow: hidden;
+          display: flex; align-items: center;
+        }
+        .campaign-bg {
+          position: absolute; inset: 0;
+          background: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1800&q=80') center/cover no-repeat;
+          filter: grayscale(40%) contrast(1.15);
+          transform: scale(1.02);
+        }
+        .campaign-overlay {
+          position: absolute; inset: 0;
+          background: linear-gradient(90deg, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.6) 50%, rgba(10,10,10,0.3) 100%);
+        }
+        .campaign-content {
+          position: relative; z-index: 2;
+          padding: 0 48px; max-width: 700px;
+        }
+        .campaign-issue {
+          font-family: 'DM Mono', monospace; font-size: 9px;
+          letter-spacing: 0.35em; color: #FF5E1A; text-transform: uppercase;
+          margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+        }
+        .campaign-issue::before { content: ''; width: 30px; height: 1px; background: #FF5E1A; }
+        .campaign-title {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: clamp(56px, 8vw, 120px);
+          line-height: 0.9; color: #F5F5F5; margin-bottom: 24px;
+        }
+        .campaign-title em {
+          font-family: 'Playfair Display', serif;
+          font-style: italic; color: #FF5E1A; font-size: 0.7em;
+        }
+        .campaign-desc {
+          font-family: 'DM Mono', monospace; font-size: 12px;
+          line-height: 1.9; color: rgba(245,245,245,0.45);
+          letter-spacing: 0.06em; margin-bottom: 40px; max-width: 440px;
+        }
+        .campaign-badge {
+          position: absolute; right: 80px; bottom: 80px; z-index: 2;
+          width: 110px; height: 110px; border-radius: 50%;
+          border: 1px solid rgba(255,94,26,0.3);
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          animation: rotateBadge 20s linear infinite;
+        }
+        @keyframes rotateBadge {
+          from { transform: rotate(0deg); } to { transform: rotate(360deg); }
+        }
+        .campaign-badge-inner {
+          font-family: 'DM Mono', monospace; font-size: 8px;
+          letter-spacing: 0.25em; color: #FF5E1A; text-transform: uppercase;
+          text-align: center; line-height: 1.6;
+          animation: rotateBadge 20s linear infinite reverse;
+        }
+
+        /* LOOKBOOK */
+        .lookbook { padding: 100px 0 100px 48px; overflow: hidden; }
+        .lookbook-header { padding-right: 48px; margin-bottom: 48px; max-width: 1400px; }
+        .lookbook-scroll {
+          display: flex; gap: 3px; overflow-x: auto;
+          scrollbar-width: none; cursor: grab; padding-right: 48px;
+        }
+        .lookbook-scroll::-webkit-scrollbar { display: none; }
+        .lookbook-scroll:active { cursor: grabbing; }
+        .lookbook-item {
+          flex-shrink: 0; width: 380px; height: 500px;
+          overflow: hidden; position: relative;
+        }
+        .lookbook-item img {
+          width: 100%; height: 100%; object-fit: cover;
+          transition: transform 0.6s ease; filter: grayscale(15%);
+        }
+        .lookbook-item:hover img { transform: scale(1.05); filter: grayscale(0%); }
+        .lookbook-item-num {
+          position: absolute; top: 16px; right: 16px;
+          font-family: 'Bebas Neue', sans-serif; font-size: 48px;
+          color: rgba(245,245,245,0.08); line-height: 1;
+        }
+
+        /* COMMUNITY */
+        .community { padding: 120px 48px; }
+        .community-grid {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          gap: 3px; margin-top: 64px; max-width: 1400px; margin-left: auto; margin-right: auto;
+        }
+        .community-item {
+          aspect-ratio: 1; overflow: hidden; position: relative;
+          cursor: none;
+        }
+        .community-item img {
+          width: 100%; height: 100%; object-fit: cover;
+          transition: transform 0.5s ease; filter: grayscale(30%);
+        }
+        .community-item:hover img { transform: scale(1.1); filter: grayscale(0%); }
+        .community-item-overlay {
+          position: absolute; inset: 0;
+          background: rgba(10,10,10,0);
+          transition: background 0.3s;
+          display: flex; align-items: center; justify-content: center;
+        }
+        .community-item:hover .community-item-overlay {
+          background: rgba(255,94,26,0.12);
+        }
+        .community-ig {
+          font-family: 'DM Mono', monospace; font-size: 9px;
+          letter-spacing: 0.2em; color: white;
+          opacity: 0; transition: opacity 0.3s; text-transform: uppercase;
+        }
+        .community-item:hover .community-ig { opacity: 1; }
+
+        /* WAITLIST */
+        .waitlist {
+          padding: 160px 48px;
+          background: #111;
+          position: relative; overflow: hidden;
+        }
+        .waitlist::before {
+          content: ''; position: absolute; top: -1px; left: 0; right: 0; height: 1px;
+          background: linear-gradient(90deg, transparent, #FF5E1A, transparent);
+        }
+        .waitlist::after {
+          content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 1px;
+          background: linear-gradient(90deg, transparent, #FF5E1A, transparent);
+        }
+        .waitlist-bg-text {
+          position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 30vw; color: rgba(255,94,26,0.03);
+          white-space: nowrap; pointer-events: none; letter-spacing: -0.05em;
+        }
+        .waitlist-inner {
+          position: relative; z-index: 1; text-align: center; max-width: 700px; margin: 0 auto;
+        }
+        .waitlist-label {
+          font-family: 'DM Mono', monospace; font-size: 10px;
+          letter-spacing: 0.3em; color: #FF5E1A; text-transform: uppercase;
+          margin-bottom: 20px;
+        }
+        .waitlist-title {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: clamp(52px, 7vw, 100px);
+          line-height: 0.95; color: #F5F5F5; margin-bottom: 16px;
+        }
+        .waitlist-sub {
+          font-family: 'DM Mono', monospace; font-size: 12px;
+          color: rgba(245,245,245,0.35); letter-spacing: 0.06em;
+          margin-bottom: 52px; text-transform: uppercase; line-height: 1.8;
+        }
+        .waitlist-form {
+          display: flex; gap: 0; max-width: 520px; margin: 0 auto;
+        }
+        .waitlist-input {
+          flex: 1; background: rgba(245,245,245,0.05);
+          border: 1px solid rgba(245,245,245,0.1);
+          border-right: none; color: #F5F5F5;
+          font-family: 'DM Mono', monospace; font-size: 12px;
+          letter-spacing: 0.1em; padding: 18px 24px;
+          outline: none; transition: border-color 0.2s;
+        }
+        .waitlist-input::placeholder { color: rgba(245,245,245,0.2); }
+        .waitlist-input:focus { border-color: rgba(255,94,26,0.5); }
+        .waitlist-btn {
+          background: #FF5E1A; color: #0A0A0A;
+          font-family: 'DM Mono', monospace; font-size: 11px;
+          letter-spacing: 0.22em; text-transform: uppercase;
+          padding: 18px 32px; border: none; cursor: none;
+          transition: background 0.2s; font-weight: 500; white-space: nowrap;
+        }
+        .waitlist-btn:hover { background: #F5F5F5; }
+        .waitlist-success {
+          font-family: 'DM Mono', monospace; font-size: 12px;
+          letter-spacing: 0.1em; color: #FF5E1A; text-transform: uppercase;
+        }
+
+        /* FOOTER */
+        .footer {
+          background: #0A0A0A; padding: 64px 48px 40px;
+          border-top: 1px solid rgba(245,245,245,0.05);
+        }
+        .footer-top {
+          display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+          gap: 60px; margin-bottom: 60px;
+        }
+        .footer-brand-name {
+          font-family: 'Bebas Neue', sans-serif;
+          font-size: 36px; letter-spacing: 0.1em; margin-bottom: 16px;
+        }
+        .footer-brand-name span { color: #FF5E1A; }
+        .footer-tagline {
+          font-family: 'DM Mono', monospace; font-size: 11px;
+          color: rgba(245,245,245,0.3); letter-spacing: 0.1em; line-height: 1.8;
+          text-transform: uppercase; max-width: 260px;
+        }
+        .footer-col-title {
+          font-family: 'DM Mono', monospace; font-size: 9px;
+          letter-spacing: 0.28em; color: #FF5E1A; text-transform: uppercase;
+          margin-bottom: 24px;
+        }
+        .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .footer-links a {
+          font-family: 'DM Mono', monospace; font-size: 11px;
+          letter-spacing: 0.1em; color: rgba(245,245,245,0.35);
+          text-decoration: none; text-transform: uppercase; transition: color 0.2s;
+        }
+        .footer-links a:hover { color: #F5F5F5; }
+        .footer-bottom {
+          display: flex; align-items: center; justify-content: space-between;
+          border-top: 1px solid rgba(245,245,245,0.05); padding-top: 32px;
+        }
+        .footer-copy {
+          font-family: 'DM Mono', monospace; font-size: 10px;
+          color: rgba(245,245,245,0.2); letter-spacing: 0.1em; text-transform: uppercase;
+        }
+        .footer-social { display: flex; gap: 24px; }
+        .footer-social a {
+          font-family: 'DM Mono', monospace; font-size: 10px;
+          letter-spacing: 0.18em; color: rgba(245,245,245,0.3);
+          text-decoration: none; text-transform: uppercase;
+          transition: color 0.2s; cursor: none;
+        }
+        .footer-social a:hover { color: #FF5E1A; }
+
+        @media (max-width: 1024px) {
+          .products-grid { grid-template-columns: repeat(2, 1fr); }
+          .story-grid { grid-template-columns: 1fr; gap: 60px; }
+          .footer-top { grid-template-columns: 1fr 1fr; }
+          .community-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 768px) {
+          .nav { padding: 0 24px; }
+          .nav-links { display: none; }
+          .hero { padding: 0 24px 60px; }
+          .story, .products, .campaign-content, .waitlist, .community { padding-left: 24px; padding-right: 24px; }
+          .products-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+          .community-grid { grid-template-columns: repeat(2, 1fr); }
+          .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+          .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+          .campaign-badge { display: none; }
+          .lookbook-item { width: 280px; height: 360px; }
+        }
+      `}</style>
+
+      {/* Grain overlay */}
+      <div className="grain" />
+
+      {/* Custom cursor */}
+      <div
+        className="cursor-dot"
+        style={{ left: cursor.x, top: cursor.y }}
+      />
+      <div
+        className={`cursor-ring ${cursorHover ? "hover" : ""}`}
+        style={{ left: cursor.x, top: cursor.y }}
+      />
+
+      {/* Loader */}
+      <div className={`loader ${!loading ? "out" : ""}`}>
+        <div className="loader-brand">
+          GUTTER<span>GOLD</span>
+        </div>
+        <div className="loader-line">
+          <div className="loader-fill" style={{ width: `${loadProgress}%` }} />
+        </div>
+        <div className="loader-num">{String(loadProgress).padStart(3, "0")} %</div>
+      </div>
+
+      {/* NAV */}
+      <nav className={`nav ${navVisible ? "scrolled" : ""}`}>
+        <div className="nav-logo">GUTTER<span>GOLD</span></div>
+        <ul className="nav-links">
+          <li><a href="#">Shop</a></li>
+          <li><a href="#">Lookbook</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Community</a></li>
+        </ul>
+        <a
+          className="nav-cta"
+          href="#waitlist"
+          onMouseEnter={() => setCursorHover(true)}
+          onMouseLeave={() => setCursorHover(false)}
+        >
+          Join Waitlist
+        </a>
+      </nav>
+
+      {/* HERO */}
+      <section className="hero">
+        <div className="hero-bg" />
+        <div className="hero-content">
+          <div className="hero-eyebrow">GUTTERGOLD — DROP 001</div>
+          <h1 className="hero-headline">
+            FROM THE<br />
+            <span className="accent">GUTTER.</span><br />
+            BUILT FOR<br />
+            GREATNESS.
+          </h1>
+          <p className="hero-sub">
+            GUTTERGOLD is for those who turn struggle into status.
+          </p>
+          <div className="hero-btns">
+            <button
+              className="btn-primary"
+              onMouseEnter={() => setCursorHover(true)}
+              onMouseLeave={() => setCursorHover(false)}
+            >
+              Shop The Drop
+            </button>
+            <button
+              className="btn-secondary"
+              onMouseEnter={() => setCursorHover(true)}
+              onMouseLeave={() => setCursorHover(false)}
+            >
+              Join The Waitlist
+            </button>
+          </div>
+        </div>
+        <div className="hero-scroll">
+          <div className="hero-scroll-text">Scroll</div>
+          <div className="hero-scroll-line" />
+        </div>
+      </section>
+
+      {/* BRAND STORY */}
+      <section className="story">
+        <div className="story-grid">
+          <div>
+            <div className="story-label">Our Story</div>
+            <h2 className="story-headline">THE WORLD<br />LOOKS DOWN.<br />WE LOOK<br />FORWARD.</h2>
+            <div className="story-text">
+              <p>
+                GUTTERGOLD was born in the cracks between what is and what could be. In Lagos backstreets and Johannesburg corners. In the spaces where ambition outpaces access.
+              </p>
+              <p>
+                We are built from overlooked stories turned into undeniable movements. Every piece carries the weight of those who were told they didn't belong — and showed up anyway.
+              </p>
+              <p>
+                This is not luxury for luxury's sake. This is armor for the ascent. Worn by those who know that the distance between gutter and greatness is only a matter of will.
+              </p>
+            </div>
+          </div>
+          <div>
+            <div className="story-stat-grid" style={{ marginBottom: "3px" }}>
+              <div className="story-stat">
+                <div className="story-stat-num">001</div>
+                <div className="story-stat-label">First Drop</div>
+              </div>
+              <div className="story-stat">
+                <div className="story-stat-num">7</div>
+                <div className="story-stat-label">Cities. One Vision.</div>
+              </div>
+              <div className="story-stat" style={{ gridColumn: "1 / -1" }}>
+                <div className="story-stat-num">∞</div>
+                <div className="story-stat-label">The movement has no ceiling</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Story image below */}
+        <div style={{ maxWidth: "1400px", margin: "80px auto 0", display: "grid", gridTemplateColumns: "3fr 2fr", gap: "3px" }}>
+          <div className="story-img-wrap">
+            <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=1200&q=80" alt="Campaign" />
+            <div className="story-img-overlay" />
+            <div className="story-img-tag">Lagos, 2024</div>
+          </div>
+          <div className="story-img-wrap">
+            <img src="https://images.unsplash.com/photo-1516466723877-e4ec1d736c8a?w=800&q=80" alt="Campaign" />
+            <div className="story-img-overlay" />
+            <div className="story-img-tag">Nairobi, 2024</div>
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED DROP */}
+      <section className="products">
+        <div className="section-header">
+          <div className="section-header-row">
+            <div>
+              <div className="section-label">Featured Drop</div>
+              <h2 className="section-title">DROP 001</h2>
+            </div>
+            <a className="section-link" href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>
+              View All →
+            </a>
+          </div>
+        </div>
+        <div className="products-grid">
+          {PRODUCTS.map((p) => (
+            <div
+              key={p.id}
+              className="product-card"
+              onMouseEnter={() => { setHoveredProduct(p.id); setCursorHover(true); }}
+              onMouseLeave={() => { setHoveredProduct(null); setCursorHover(false); }}
+            >
+              <div className="product-img-wrap">
+                <img src={p.img} alt={p.name} />
+                <div className="product-overlay" />
+                <div className="product-tag">{p.tag}</div>
+                <div className="product-add">+ Add to Cart</div>
+              </div>
+              <div className="product-info">
+                <div className="product-name">{p.name}</div>
+                <div className="product-meta">
+                  <span className="product-color">{p.color}</span>
+                  <span className="product-price">{p.price}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CAMPAIGN */}
+      <section className="campaign">
+        <div className="campaign-bg" />
+        <div className="campaign-overlay" />
+        <div className="campaign-content">
+          <div className="campaign-issue">Campaign — Issue 001</div>
+          <h2 className="campaign-title">
+            NO<br />
+            <em>Signal</em><br />
+            NEEDED.
+          </h2>
+          <p className="campaign-desc">
+            Photographed across three African cities. Directed by those who live the vision. This is not fashion as costume — this is fashion as language.
+          </p>
+          <button
+            className="btn-primary"
+            onMouseEnter={() => setCursorHover(true)}
+            onMouseLeave={() => setCursorHover(false)}
+          >
+            View Editorial →
+          </button>
+        </div>
+        <div className="campaign-badge">
+          <div className="campaign-badge-inner">
+            GUTTER<br />GOLD<br />001
+          </div>
+        </div>
+      </section>
+
+      {/* LOOKBOOK */}
+      <section className="lookbook">
+        <div className="lookbook-header">
+          <div className="section-label">Lookbook</div>
+          <h2 className="section-title">THE COLLECTION</h2>
+        </div>
+        <div
+          className="lookbook-scroll"
+          ref={lookbookRef}
+          onMouseDown={(e) => {
+            const el = lookbookRef.current;
+            const startX = e.pageX - el.offsetLeft;
+            const scrollLeft = el.scrollLeft;
+            const onMove = (ev) => {
+              const x = ev.pageX - el.offsetLeft;
+              el.scrollLeft = scrollLeft - (x - startX) * 1.5;
+            };
+            const onUp = () => {
+              window.removeEventListener("mousemove", onMove);
+              window.removeEventListener("mouseup", onUp);
+            };
+            window.addEventListener("mousemove", onMove);
+            window.addEventListener("mouseup", onUp);
+          }}
+        >
+          {LOOKBOOK.map((img, i) => (
+            <div
+              className="lookbook-item"
+              key={i}
+              onMouseEnter={() => setCursorHover(true)}
+              onMouseLeave={() => setCursorHover(false)}
+            >
+              <img src={img} alt={`Look ${i + 1}`} draggable={false} />
+              <div className="lookbook-item-num">0{i + 1}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* COMMUNITY */}
+      <section className="community">
+        <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
+          <div className="section-header-row" style={{ marginBottom: "0" }}>
+            <div>
+              <div className="section-label">Community</div>
+              <h2 className="section-title">WORN BY THE<br />MOVEMENT</h2>
+            </div>
+            <a
+              href="#"
+              className="section-link"
+              onMouseEnter={() => setCursorHover(true)}
+              onMouseLeave={() => setCursorHover(false)}
+            >
+              @GUTTERGOLD →
+            </a>
+          </div>
+          <div className="community-grid">
+            {COMMUNITY.map((img, i) => (
+              <div
+                className="community-item"
+                key={i}
+                onMouseEnter={() => setCursorHover(true)}
+                onMouseLeave={() => setCursorHover(false)}
+              >
+                <img src={img} alt={`Community ${i + 1}`} />
+                <div className="community-item-overlay">
+                  <span className="community-ig">@guttergold</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* WAITLIST */}
+      <section className="waitlist" id="waitlist">
+        <div className="waitlist-bg-text">GG</div>
+        <div className="waitlist-inner">
+          <div className="waitlist-label">Exclusive Access</div>
+          <h2 className="waitlist-title">BEFORE THE<br />WORLD KNOWS.</h2>
+          <p className="waitlist-sub">
+            Drop 002 is coming.<br />Be the first to know. No algorithm. No noise.
+          </p>
+          {submitted ? (
+            <div className="waitlist-success">
+              ✦ You're on the list. Stay ready.
+            </div>
+          ) : (
+            <div className="waitlist-form">
+              <input
+                className="waitlist-input"
+                type="email"
+                placeholder="YOUR EMAIL ADDRESS"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+              />
+              <button
+                className="waitlist-btn"
+                onClick={handleSubmit}
+                onMouseEnter={() => setCursorHover(true)}
+                onMouseLeave={() => setCursorHover(false)}
+              >
+                Secure Spot
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="footer">
+        <div className="footer-top">
+          <div>
+            <div className="footer-brand-name">GUTTER<span>GOLD</span></div>
+            <p className="footer-tagline">
+              From the gutter.<br />
+              Built for greatness.<br />
+              Made for those who rise.
+            </p>
+          </div>
+          <div>
+            <div className="footer-col-title">Shop</div>
+            <ul className="footer-links">
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>New Arrivals</a></li>
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>Drop 001</a></li>
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>All Products</a></li>
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>Accessories</a></li>
+            </ul>
+          </div>
+          <div>
+            <div className="footer-col-title">Info</div>
+            <ul className="footer-links">
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>Lookbook</a></li>
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>About</a></li>
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>Stockists</a></li>
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <div className="footer-col-title">Follow</div>
+            <ul className="footer-links">
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>Instagram</a></li>
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>TikTok</a></li>
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>Twitter / X</a></li>
+              <li><a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>YouTube</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span className="footer-copy">© 2024 GUTTERGOLD. ALL RIGHTS RESERVED.</span>
+          <div className="footer-social">
+            <a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>IG</a>
+            <a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>TT</a>
+            <a href="#" onMouseEnter={() => setCursorHover(true)} onMouseLeave={() => setCursorHover(false)}>TW</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
